@@ -67,6 +67,17 @@ if __name__ == '__main__':
   model1.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
   print("Model 1 Summary:")
   print(model1.summary())
+
+  train_history1 = model1.fit(train_images, train_labels, 
+                              validation_data=(val_images, val_labels), 
+                              epochs=30)
+  
+  plt.plot(train_history1.epoch, train_history1.history['accuracy'], label='train_accuracy')
+  plt.plot(train_history1.epoch, train_history1.history['val_accuracy'], label='val_accuracy')
+
+  print("Training accuracy: ", train_history1.history['accuracy'][-1])
+  print("Validation accuracy: ", train_history1.history['val_accuracy'][-1])
+  print("Test Accuracy: ", model1.evaluate(test_images, test_labels, verbose=2)[1])
   ## Build, compile, and train model 2 (DS Convolutions)
   model2 = build_model2()
 
