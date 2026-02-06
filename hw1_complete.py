@@ -48,7 +48,18 @@ if __name__ == '__main__':
 
   ########################################
   ## Add code here to Load the CIFAR10 data set
+  (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar10.load_data()
 
+  # Split a validation set from the training data (assuming the data is already shuffled)
+  _size = x_train.shape[0]
+  val_size = int(0.2 * _size)
+  train_images = x_train[:-val_size]
+  train_labels = y_train[:-val_size]
+  val_images = x_train[-val_size:]
+  val_labels = y_train[-val_size:]
+  test_images = x_test
+  test_labels = y_test
+  
   ########################################
   ## Build and train model 1
   model1 = build_model1()
