@@ -30,7 +30,23 @@ def build_model1():
   return model
 
 def build_model2():
-  model = None # Add code to define model 1.
+  model = tf.keras.Sequential([
+    Input(shape=(32, 32, 3)),
+    layers.Conv2D(32, kernel_size=(3,3), activation='relu', padding='same', strides=(2,2)),
+    layers.BatchNormalization(),
+    layers.Conv2D(64, kernel_size=(3,3), activation='relu', padding='same', strides=(2,2)),
+    layers.BatchNormalization(),
+    layers.Conv2D(128, kernel_size=(3,3), activation='relu', padding='same'),
+    layers.BatchNormalization(),
+    layers.Conv2D(128, kernel_size=(3,3), activation='relu', padding='same'),
+    layers.BatchNormalization(),
+    layers.Conv2D(128, kernel_size=(3,3), activation='relu', padding='same'),
+    layers.BatchNormalization(),
+    layers.Conv2D(128, kernel_size=(3,3), activation='relu', padding='same'),
+    layers.BatchNormalization(),
+    layers.Flatten(),
+    layers.Dense(10, activation=None)
+  ])
   return model
 
 def build_model3():
@@ -61,27 +77,43 @@ if __name__ == '__main__':
   test_labels = y_test
   
   ########################################
-  ## Build and train model 1
-  model1 = build_model1()
-  # compile and train model 1.
-  model1.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
-  print("Model 1 Summary:")
-  print(model1.summary())
 
-  train_history1 = model1.fit(train_images, train_labels, 
-                              validation_data=(val_images, val_labels), 
-                              epochs=30)
-  
-  plt.plot(train_history1.epoch, train_history1.history['accuracy'], label='train_accuracy')
-  plt.plot(train_history1.epoch, train_history1.history['val_accuracy'], label='val_accuracy')
+  if False:
+    ## Build and train model 1
+    model1 = build_model1()
+    # compile and train model 1.
+    model1.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
+    print("Model 1 Summary:")
+    print(model1.summary())
 
-  print("Training accuracy: ", train_history1.history['accuracy'][-1])
-  print("Validation accuracy: ", train_history1.history['val_accuracy'][-1])
-  print("Test Accuracy: ", model1.evaluate(test_images, test_labels, verbose=2)[1])
+    train_history1 = model1.fit(train_images, train_labels, 
+                                validation_data=(val_images, val_labels), 
+                                epochs=30)
+    
+    plt.plot(train_history1.epoch, train_history1.history['accuracy'], label='train_accuracy')
+    plt.plot(train_history1.epoch, train_history1.history['val_accuracy'], label='val_accuracy')
+
+    print("Training accuracy: ", train_history1.history['accuracy'][-1])
+    print("Validation accuracy: ", train_history1.history['val_accuracy'][-1])
+    print("Test Accuracy: ", model1.evaluate(test_images, test_labels)[1])
+    
+    
   ## Build, compile, and train model 2 (DS Convolutions)
   model2 = build_model2()
+  model2.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
+  print("Model 2 Summary:")
+  print(model2.summary())
+  train_history2 = model2.fit(train_images, train_labels, 
+                                validation_data=(val_images, val_labels), 
+                                epochs=30)
 
-  
+  plt.plot(train_history2.epoch, train_history2.history['accuracy'], label='train_accuracy')
+  plt.plot(train_history2.epoch, train_history2.history['val_accuracy'], label='val_accuracy')
+
+  print("Training accuracy: ", train_history2.history['accuracy'][-1])
+  print("Validation accuracy: ", train_history2.history['val_accuracy'][-1])
+  print("Test Accuracy: ", model2.evaluate(test_images, test_labels)[1])
+    
   ### Repeat for model 3 and your best sub-50k params model
   
   
