@@ -97,23 +97,34 @@ if __name__ == '__main__':
     print("Validation accuracy: ", train_history1.history['val_accuracy'][-1])
     print("Test Accuracy: ", model1.evaluate(test_images, test_labels)[1])
     
-    
-  ## Build, compile, and train model 2 (DS Convolutions)
-  model2 = build_model2()
-  model2.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
-  print("Model 2 Summary:")
-  print(model2.summary())
-  train_history2 = model2.fit(train_images, train_labels, 
-                                validation_data=(val_images, val_labels), 
-                                epochs=30)
+  if True:
+    ## Build, compile, and train model 2 (DS Convolutions)
+    model2 = build_model2()
+    model2.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
+    print("Model 2 Summary:")
+    print(model2.summary())
+    train_history2 = model2.fit(train_images, train_labels, 
+                                  validation_data=(val_images, val_labels), 
+                                  epochs=30)
 
-  plt.plot(train_history2.epoch, train_history2.history['accuracy'], label='train_accuracy')
-  plt.plot(train_history2.epoch, train_history2.history['val_accuracy'], label='val_accuracy')
+    plt.plot(train_history2.epoch, train_history2.history['accuracy'], label='train_accuracy')
+    plt.plot(train_history2.epoch, train_history2.history['val_accuracy'], label='val_accuracy')
 
-  print("Training accuracy: ", train_history2.history['accuracy'][-1])
-  print("Validation accuracy: ", train_history2.history['val_accuracy'][-1])
-  print("Test Accuracy: ", model2.evaluate(test_images, test_labels)[1])
+    print("Training accuracy: ", train_history2.history['accuracy'][-1])
+    print("Validation accuracy: ", train_history2.history['val_accuracy'][-1])
+    print("Test Accuracy: ", model2.evaluate(test_images, test_labels)[1])
     
-  ### Repeat for model 3 and your best sub-50k params model
+    ## Test the model with a picture
+    test_img = np.array(keras.utils.load_img(
+      './dog.png',
+      grayscale=False,
+      color_mode='rgb',
+      target_size=(32,32)))
+    
+print("Prediction:", model2.predict(test_img.reshape(1, 32, 32, 3)))
+
+  ## Build and train model 3
+  
+
   
   
