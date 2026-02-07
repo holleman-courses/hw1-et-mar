@@ -111,83 +111,91 @@ if __name__ == '__main__':
   
   ########################################
 
-  if False:
-    ## Build and train model 1
-    model1 = build_model1()
-    # compile and train model 1.
-    model1.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
-    print("Model 1 Summary:")
-    print(model1.summary())
 
-    train_history1 = model1.fit(train_images, train_labels, 
+  ## Build and train model 1
+  model1 = build_model1()
+  # compile and train model 1.
+  model1.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
+  print("Model 1 Summary:")
+  print(model1.summary())
+
+  train_history1 = model1.fit(train_images, train_labels, 
+                              validation_data=(val_images, val_labels), 
+                              epochs=30)
+  
+  plt.plot(train_history1.epoch, train_history1.history['accuracy'], label='train_accuracy')
+  plt.plot(train_history1.epoch, train_history1.history['val_accuracy'], label='val_accuracy')
+  plt.legend()
+
+  print("Training accuracy: ", train_history1.history['accuracy'][-1])
+  print("Validation accuracy: ", train_history1.history['val_accuracy'][-1])
+  print("Test Accuracy: ", model1.evaluate(test_images, test_labels)[1])
+  
+
+  ## Build, compile, and train model 2 (DS Convolutions)
+  model2 = build_model2()
+  model2.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
+  print("Model 2 Summary:")
+  print(model2.summary())
+  train_history2 = model2.fit(train_images, train_labels, 
                                 validation_data=(val_images, val_labels), 
                                 epochs=30)
-    
-    plt.plot(train_history1.epoch, train_history1.history['accuracy'], label='train_accuracy')
-    plt.plot(train_history1.epoch, train_history1.history['val_accuracy'], label='val_accuracy')
 
-    print("Training accuracy: ", train_history1.history['accuracy'][-1])
-    print("Validation accuracy: ", train_history1.history['val_accuracy'][-1])
-    print("Test Accuracy: ", model1.evaluate(test_images, test_labels)[1])
-    
-  if False:
-    ## Build, compile, and train model 2 (DS Convolutions)
-    model2 = build_model2()
-    model2.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
-    print("Model 2 Summary:")
-    print(model2.summary())
-    train_history2 = model2.fit(train_images, train_labels, 
-                                  validation_data=(val_images, val_labels), 
-                                  epochs=30)
+  plt.figure()
+  plt.plot(train_history2.epoch, train_history2.history['accuracy'], label='train_accuracy')
+  plt.plot(train_history2.epoch, train_history2.history['val_accuracy'], label='val_accuracy')
+  plt.legend()
 
-    plt.plot(train_history2.epoch, train_history2.history['accuracy'], label='train_accuracy')
-    plt.plot(train_history2.epoch, train_history2.history['val_accuracy'], label='val_accuracy')
-
-    print("Training accuracy: ", train_history2.history['accuracy'][-1])
-    print("Validation accuracy: ", train_history2.history['val_accuracy'][-1])
-    print("Test Accuracy: ", model2.evaluate(test_images, test_labels)[1])
-    
-    ## Test the model with a picture
-    test_img = np.array(keras.utils.load_img(
-      './dog.png',
-      grayscale=False,
-      color_mode='rgb',
-      target_size=(32,32)))
-    print("Prediction:", model2.predict(test_img.reshape(1, 32, 32, 3)))
+  print("Training accuracy: ", train_history2.history['accuracy'][-1])
+  print("Validation accuracy: ", train_history2.history['val_accuracy'][-1])
+  print("Test Accuracy: ", model2.evaluate(test_images, test_labels)[1])
+  
+  ## Test the model with a picture
+  test_img = np.array(keras.utils.load_img(
+    './dog.png',
+    grayscale=False,
+    color_mode='rgb',
+    target_size=(32,32)))
+  print("Prediction:", model2.predict(test_img.reshape(1, 32, 32, 3)))
 
   ## Build and train model 3
-  if False:
-    model3 = build_model3()
-    model3.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
-    print("Model 3 Summary:")
-    print(model3.summary())
-    train_history3 = model3.fit(train_images, train_labels, 
-                                  validation_data=(val_images, val_labels), 
-                                  epochs=30)
+  model3 = build_model3()
+  model3.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
+  print("Model 3 Summary:")
+  print(model3.summary())
+  train_history3 = model3.fit(train_images, train_labels, 
+                                validation_data=(val_images, val_labels), 
+                                epochs=30)
 
-    plt.plot(train_history3.epoch, train_history3.history['accuracy'], label='train_accuracy')
-    plt.plot(train_history3.epoch, train_history3.history['val_accuracy'], label='val_accuracy')
+  plt.figure()
+  plt.plot(train_history3.epoch, train_history3.history['accuracy'], label='train_accuracy')
+  plt.plot(train_history3.epoch, train_history3.history['val_accuracy'], label='val_accuracy')
+  plt.legend()
 
-    print("Training accuracy: ", train_history3.history['accuracy'][-1])
-    print("Validation accuracy: ", train_history3.history['val_accuracy'][-1])
-    print("Test Accuracy: ", model3.evaluate(test_images, test_labels)[1])
-  
+  print("Training accuracy: ", train_history3.history['accuracy'][-1])
+  print("Validation accuracy: ", train_history3.history['val_accuracy'][-1])
+  print("Test Accuracy: ", model3.evaluate(test_images, test_labels)[1])
+
   ## Build and train the 50k model
-  if True:
-    model50k = build_model50k()
-    model50k.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
-    print("50k Model Summary")
-    print(model50k.summary())
+  model50k = build_model50k()
+  model50k.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
+  print("50k Model Summary")
+  print(model50k.summary())
 
-    train_history50k = model50k.fit(train_images, train_labels, 
-                                  validation_data=(val_images, val_labels), 
-                                  epochs=15)
-    
-    print("Training accuracy: ", train_history50k.history['accuracy'][-1])
-    print("Validation accuracy: ", train_history50k.history['val_accuracy'][-1])
-    
-    loss, acc = model50k.evaluate(test_images, test_labels)
-    print("Test Accuracy: ", acc)
+  train_history50k = model50k.fit(train_images, train_labels, 
+                                validation_data=(val_images, val_labels), 
+                                epochs=15)
 
-    model50k.save("best_model.h5")
+  plt.figure()
+  plt.plot(train_history50k.epoch, train_history50k.history['accuracy'], label='train_accuracy')
+  plt.plot(train_history50k.epoch, train_history50k.history['val_accuracy'], label='val_accuracy')
+  plt.legend()
+
+  print("Training accuracy: ", train_history50k.history['accuracy'][-1])
+  print("Validation accuracy: ", train_history50k.history['val_accuracy'][-1])
+  
+  loss, acc = model50k.evaluate(test_images, test_labels)
+  print("Test Accuracy: ", acc)
+
+  model50k.save("best_model.h5")
 
