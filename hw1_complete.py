@@ -102,12 +102,12 @@ if __name__ == '__main__':
   # Split a validation set from the training data (assuming the data is already shuffled)
   _size = x_train.shape[0]
   val_size = int(0.2 * _size)
-  train_images = x_train[:-val_size]
+  train_images = x_train[:-val_size] / 255.0
   train_labels = y_train[:-val_size]
-  val_images = x_train[-val_size:]
+  val_images = x_train[-val_size:] / 255.0
   val_labels = y_train[-val_size:]
-  test_images = x_test
-  test_labels = y_test
+  test_images = x_test / 255.0
+  test_labels = y_test 
   
   ########################################
 
@@ -181,11 +181,13 @@ if __name__ == '__main__':
 
     train_history50k = model50k.fit(train_images, train_labels, 
                                   validation_data=(val_images, val_labels), 
-                                  epochs=30)
+                                  epochs=15)
     
     print("Training accuracy: ", train_history50k.history['accuracy'][-1])
     print("Validation accuracy: ", train_history50k.history['val_accuracy'][-1])
-    print("Test Accuracy: ", model50k.evaluate(test_images, test_labels)[1])
+    
+    loss, acc = model50k.evaluate(test_images, test_labels)
+    print("Test Accuracy: ", acc)
 
     model50k.save("best_model.h5")
 
