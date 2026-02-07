@@ -71,7 +71,24 @@ def build_model3():
   return model
 
 def build_model50k():
-  model = None # Add code to define model 1.
+  model = model = tf.keras.Sequential([
+    Input(shape=(32, 32, 3)),
+    layers.Conv2D(32, kernel_size=(3,3), activation='relu', padding='same', strides=(2,2)),
+    layers.MaxPooling2D(pool_size=(2, 2)),
+    layers.BatchNormalization(),
+
+    layers.Conv2D(64, kernel_size=(3,3), activation='relu', padding='same', strides=(2,2)),
+    layers.BatchNormalization(),
+
+    layers.Conv2D(32, kernel_size=(3,3), activation='relu', padding='same', strides=(2,2)),
+    layers.MaxPooling2D(pool_size=(2, 2)),
+    layers.BatchNormalization(),
+
+
+    layers.Flatten(),
+    layers.Dense(32, activation='relu'),
+    layers.Dense(10, activation=None)
+  ])
   return model
 
 # no training or dataset construction should happen above this line
@@ -139,7 +156,7 @@ if __name__ == '__main__':
     print("Prediction:", model2.predict(test_img.reshape(1, 32, 32, 3)))
 
   ## Build and train model 3
-  if True:
+  if False:
     model3 = build_model3()
     model3.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
     print("Model 3 Summary:")
@@ -155,4 +172,20 @@ if __name__ == '__main__':
     print("Validation accuracy: ", train_history3.history['val_accuracy'][-1])
     print("Test Accuracy: ", model3.evaluate(test_images, test_labels)[1])
   
-  
+  ## Build and train the 50k model
+  if True:
+    model50k = build_model50k()
+    model50k.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
+    print("50k Model Summary")
+    print(model50k.summary())
+
+    train_history50k = model50k.fit(train_images, train_labels, 
+                                  validation_data=(val_images, val_labels), 
+                                  epochs=30)
+    
+    print("Training accuracy: ", train_history50k.history['accuracy'][-1])
+    print("Validation accuracy: ", train_history50k.history['val_accuracy'][-1])
+    print("Test Accuracy: ", model50k.evaluate(test_images, test_labels)[1])
+
+    model50k.save("best_model.h5")
+
